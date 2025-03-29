@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ observation.title }} - Nature Observation</title>
+    <style>
+        .detail-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .nav-links {
+            margin: 20px 0;
+        }
+        .nav-links a {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/observations">All Observations</a>
+    </div>
+    
+    <div class="detail-card">
+        <h1>{{ observation.title }}</h1>
+        
+        <p><strong>Date and Time:</strong> {{ observation.observation_date }}</p>
+        <p><strong>Location:</strong> {{ observation.location or 'Not specified' }}</p>
+        
+        {% if observation.weather_conditions %}
+            <p><strong>Weather:</strong> {{ observation.weather_conditions }}</p>
+        {% endif %}
+        
+        {% if observation.temperature %}
+            <p><strong>Temperature:</strong> {{ observation.temperature }}°F</p>
+        {% endif %}
+        
+        {% if observation.species_observed %}
+            <p><strong>Species Observed:</strong> {{ observation.species_observed }}</p>
+        {% endif %}
+        
+        {% if observation.description %}
+            <h3>Description</h3>
+            <p>{{ observation.description }}</p>
+        {% endif %}
+        
+        {% if observation.notes %}
+            <h3>Notes</h3>
+            <p>{{ observation.notes }}</p>
+        {% endif %}
+        
+        {% if observation.image_path %}
+            <h3>Image</h3>
+            <img src="{{ observation.image_path }}" alt="Observation image" style="max-width: 100%;">
+        {% endif %}
+        
+        <p><small>Created: {{ observation.created_at }}</small></p>
+    </div>
+</body>
+</html>
