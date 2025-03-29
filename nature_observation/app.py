@@ -13,21 +13,28 @@ def index():
 def log_observation():
     """Handle the form submission to log a new observation."""
     title = request.form['title']
-    description = request.form['description']
-    location = request.form['location']
-    observation_date = request.form['observation_date']
-    weather_conditions = request.form['weather_conditions']
-    temperature = request.form['temperature']
-    species_observed = request.form['species_observed']
-    notes = request.form['notes']
-    image_path = request.form['image_path']
+    description = request.form.get('description', '')
+    location = request.form.get('location', '')
+    observation_date = request.form.get('observation_date', '')
+    weather_conditions = request.form.get('weather_conditions', '')
+    temperature = request.form.get('temperature', '')
+    if temperature and temperature.strip():
+        try:
+            temperature = float(temperature)
+        except ValueError:
+            temperature = None
+    else:
+        temperature = None
+    species_observed = request.form.get('species_observed', '')
+    notes = request.form.get('notes', '')
+    image_path = request.form.get('image_path', '')
     
     # Add the observation to the database
     observation_id = tool.add_observation(
         title=title,
         description=description,
         location=location,
-        observation_date=observation_date,
+        observation_date=observation_date if observation_date else None,
         weather_conditions=weather_conditions,
         temperature=temperature,
         species_observed=species_observed,

@@ -4,61 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ observation.title }} - Nature Observation</title>
-    <style>
-        .detail-card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 5px;
-        }
-        .nav-links {
-            margin: 20px 0;
-        }
-        .nav-links a {
-            margin-right: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/observations">All Observations</a>
-    </div>
+    <h1>{{ observation.title }}</h1>
+    
+    <a href="/" class="nav-link">Home</a>
+    <a href="/observations" class="nav-link">All Observations</a>
     
     <div class="detail-card">
-        <h1>{{ observation.title }}</h1>
+        <div class="field">
+            <span class="field-name">Date:</span> 
+            {{ observation.observation_date }}
+        </div>
         
-        <p><strong>Date and Time:</strong> {{ observation.observation_date }}</p>
-        <p><strong>Location:</strong> {{ observation.location or 'Not specified' }}</p>
-        
-        {% if observation.weather_conditions %}
-            <p><strong>Weather:</strong> {{ observation.weather_conditions }}</p>
-        {% endif %}
-        
-        {% if observation.temperature %}
-            <p><strong>Temperature:</strong> {{ observation.temperature }}°F</p>
+        {% if observation.location %}
+        <div class="field">
+            <span class="field-name">Location:</span> 
+            {{ observation.location }}
+        </div>
         {% endif %}
         
         {% if observation.species_observed %}
-            <p><strong>Species Observed:</strong> {{ observation.species_observed }}</p>
+        <div class="field">
+            <span class="field-name">Species:</span> 
+            {{ observation.species_observed }}
+        </div>
         {% endif %}
         
         {% if observation.description %}
-            <h3>Description</h3>
+        <div class="field">
+            <span class="field-name">Description:</span>
             <p>{{ observation.description }}</p>
+        </div>
+        {% endif %}
+        
+        {% if observation.weather_conditions %}
+        <div class="field">
+            <span class="field-name">Weather:</span> 
+            {{ observation.weather_conditions }}
+        </div>
+        {% endif %}
+        
+        {% if observation.temperature %}
+        <div class="field">
+            <span class="field-name">Temperature:</span> 
+            {{ observation.temperature }}°F
+        </div>
         {% endif %}
         
         {% if observation.notes %}
-            <h3>Notes</h3>
+        <div class="field">
+            <span class="field-name">Notes:</span>
             <p>{{ observation.notes }}</p>
+        </div>
         {% endif %}
-        
-        {% if observation.image_path %}
-            <h3>Image</h3>
-            <img src="{{ observation.image_path }}" alt="Observation image" style="max-width: 100%;">
-        {% endif %}
-        
-        <p><small>Created: {{ observation.created_at }}</small></p>
     </div>
 </body>
 </html>

@@ -4,34 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Nature Observations</title>
-    <style>
-        .observation-card {
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        a {
-            text-decoration: none;
-        }
-        .observation-card:hover {
-            background-color: #f5f5f5;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <h1>Your Nature Observations</h1>
-    <a href="/">Log New Observation</a>
+    <a href="/" class="nav-link">Log New Observation</a>
     
     {% if observations %}
         {% for observation in observations %}
             <div class="observation-card">
                 <h2><a href="/observation/{{ observation.id }}">{{ observation.title }}</a></h2>
-                <p><strong>Date:</strong> {{ observation.observation_date }}</p>
-                <p><strong>Location:</strong> {{ observation.location or 'Not specified' }}</p>
-                <p><strong>Species:</strong> {{ observation.species_observed or 'Not specified' }}</p>
-                {% if observation.description %}
-                    <p>{{ observation.description[:100] }}{% if observation.description|length > 100 %}...{% endif %}</p>
+                <p>{{ observation.observation_date }}</p>
+                {% if observation.location %}
+                    <p>{{ observation.location }}</p>
+                {% endif %}
+                {% if observation.species_observed %}
+                    <p><em>{{ observation.species_observed }}</em></p>
                 {% endif %}
             </div>
         {% endfor %}
