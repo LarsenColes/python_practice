@@ -9,8 +9,13 @@
 <body>
     <h1>{{ observation.title }}</h1>
     
-    <a href="/" class="nav-link">Home</a>
-    <a href="/observations" class="nav-link">All Observations</a>
+    <div class="nav-actions">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/observations" class="nav-link">All Observations</a>
+        <form action="/delete_observation/{{ observation.id }}" method="post" onsubmit="return confirm('Are you sure you want to delete this observation?');">
+            <button type="submit" class="delete-btn nav-link">Delete This Observation</button>
+        </form>
+    </div>
     
     <div class="detail-card">
         <div class="field">
@@ -61,4 +66,13 @@
         {% endif %}
     </div>
 </body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash-message {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 </html>
