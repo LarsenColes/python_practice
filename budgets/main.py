@@ -40,7 +40,15 @@ class ExpenseManager():
             return
 
         data = self.load_data()
-        data.update({name: { "cost": cost, "allocated": 0}})
+        data.update({name: { "cost": cost, "allocated": 0.00}})
+        self.dump_data(data)
+
+    def remove_expense(self, expense_name: str):
+        data = self.load_data()
+        clear_screen()
+        UIManager().display_confirmation_dialogue()
+        if input("Y / N: ").lower() == "y":
+            del data[expense_name]
         self.dump_data(data)
 
     def allocate_funds(self, expense_name: str, amount: float):
@@ -106,15 +114,21 @@ class UIManager():
             return f"{self.green}[{'■' * 10}] {percent}%{self.default} "
         elif percent < 0:
             return f"{self.red}[{' ' * 10}] {percent}%{self.default} "
-        return(f"[{'■' * round(percent / 10)}{'-' * round((100 - percent) / 10)}] {percent}%")
+        return f"[{'■' * round(percent / 10)}{'-' * round((100 - percent) / 10)}] {percent}%"
+
+    def display_confirmation_dialogue(self):
+        print(f"{self.red}-----------------------------------------------+")
+        print("Are you sure you want to delete this expense? |")
+        print(f"-----------------------------------------------+ {self.default}")
 
     def handle_options(self):
         clear_screen()
         ExpenseManager().check_completion_all_individual()
         print("Please choose an option:")
         print("1. Add an expense")
-        print("2. Add funds")
-        print("3. Pay expense")
+        print("2. Remove an expense")
+        print("3. Add funds")
+        print("4. Pay expense")
         choice = int(input())
         if choice == 1:
             clear_screen()
@@ -125,10 +139,15 @@ class UIManager():
         elif choice == 2:
             clear_screen()
             ExpenseManager().check_completion_all_individual()
+            expense_name = input("What expense would you like to remove: ").lower()
+            ExpenseManager().remove_expense(expense_name)
+        elif choice == 3:
+            clear_screen()
+            ExpenseManager().check_completion_all_individual()
             expense_name = input("Which expense would you like to allocate funds to: ").lower()
             allocated_funds = float(input("How much would you like to allocate: "))
             ExpenseManager().allocate_funds(expense_name, allocated_funds)
-        elif choice == 3:
+        elif choice == 4:
             clear_screen()
             ExpenseManager().check_completion_all_individual()
             expense_name = input("Which expense did you pay from: ").lower()
