@@ -75,32 +75,37 @@ class ExpenseManager():
 
     def check_completion_all(self):
         data = self.load_data()
-        completed = 0
-        total = 0
+        total_cost = 0
+        total_allocated = 0
         for key in data:
-            total += 1
-            if data[key]["cost"] <= data[key]["allocated"]:
-                completed += 1
-        percent_complete = round(completed / total * 100, 2)
-        print(UIManager().generate_progress_bar(percent_complete))
+            total_cost += data[key]["cost"]
+            total_allocated += data[key]["allocated"]
+        percent_complete = round(total_allocated / total_cost * 100, 2)
+        progress_bar = UIManager().generate_progress_bar(percent_complete)
+        title_padding = ' ' * (15 - len("Total"))
+        cost_padding = ' ' * (6 - len(str(total_cost)))
+        allocated_fund_padding = ' ' * (6 - len(str(total_allocated)))
+        progress_bar_padding = ' ' * (20 - len(progress_bar))
+        print(f"Total{title_padding} | ${total_cost}{cost_padding} | ${total_allocated}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
 
     def check_completion_all_individual(self):
         data = self.load_data()
-        line_length = 58
+        line_length = 59
         print("-" * line_length + "+")
-        print(f"Name{' '* 11} | Cost   | Funds   | Progress{' ' * 13}|")
+        print(f"Name{' '* 11} | Cost    | Funds   | Progress{' ' * 13}|")
         print("-" * line_length + "+")
         for key in data:
             percent_complete = round(data[key]["allocated"] / data[key]["cost"] * 100, 2)
             progress_bar = UIManager().generate_progress_bar(percent_complete)
             title_padding = ' ' * (15 - len(key))
-            cost_padding = ' ' * (5 - len(str(data[key]['cost'])))
+            cost_padding = ' ' * (6 - len(str(data[key]['cost'])))
             allocated_fund_padding = ' ' * (6 - len(str(data[key]['allocated'])))
             progress_bar_padding = ' ' * (20 - len(progress_bar))
             print(f"{key.title()}{title_padding} | ${data[key]['cost']}{cost_padding} | ${data[key]['allocated']}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
 
+        print("-" * line_length + "+")
+        self.check_completion_all()
         print("-" * line_length + "+\n")
-
 
 class UIManager():
     def __init__(self):
@@ -111,9 +116,9 @@ class UIManager():
 
     def generate_progress_bar(self, percent):
         if percent >= 100:
-            return f"{self.green}[{'■' * 10}] {percent}%{self.default} "
+            return f"{self.green}[{'■' * 10}] {percent}%{self.default}"
         elif percent < 0:
-            return f"{self.red}[{' ' * 10}] {percent}%{self.default} "
+            return f"{self.red}[{' ' * 10}] {percent}%{self.default}"
         return f"[{'■' * round(percent / 10)}{'-' * round((100 - percent) / 10)}] {percent}%"
 
     def display_confirmation_dialogue(self):
