@@ -91,6 +91,7 @@ class ExpenseManager():
         cost_padding = ' ' * (6 - len(str(total_cost)))
         allocated_fund_padding = ' ' * (6 - len(str(total_allocated)))
         progress_bar_padding = ' ' * (20 - len(progress_bar))
+        progress_bar = UIManager().add_progress_color(progress_bar, percent_complete)
         total_allocated = round(total_allocated, 2)
         print(f"Total{title_padding} | ${total_cost}{cost_padding} | ${total_allocated}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
 
