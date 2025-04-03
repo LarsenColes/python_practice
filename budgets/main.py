@@ -40,7 +40,10 @@ class ExpenseManager():
             return
 
         data = self.load_data()
-        data.update({name: { "cost": cost, "allocated": 0.00}})
+        if cost != 0:
+            data.update({name: { "cost": cost, "allocated": 0.00}})
+        else:
+            data.update({name: { "allocated": 0.00}})
         self.dump_data(data)
 
     def remove_expense(self, expense_name: str):
@@ -65,7 +68,7 @@ class ExpenseManager():
     def pay_expense(self, expense_name: str, amount_spent: float):
         data = self.load_data()
         expense = data.get(expense_name)
-        if expense:
+        if expense and "cost" in expense:
             data[expense_name].update({"allocated": data[expense_name]["allocated"] - amount_spent})
         else:
             print("Sorry that expense doesn't exist.")
@@ -78,6 +81,8 @@ class ExpenseManager():
         total_cost = 0
         total_allocated = 0
         for key in data:
+            if not "cost" in data[key]:
+                continue
             total_cost += data[key]["cost"]
             total_allocated += data[key]["allocated"]
         percent_complete = round(total_allocated / total_cost * 100, 2)
@@ -86,6 +91,7 @@ class ExpenseManager():
         cost_padding = ' ' * (6 - len(str(total_cost)))
         allocated_fund_padding = ' ' * (6 - len(str(total_allocated)))
         progress_bar_padding = ' ' * (20 - len(progress_bar))
+        total_allocated = round(total_allocated, 2)
         print(f"Total{title_padding} | ${total_cost}{cost_padding} | ${total_allocated}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
 
     def check_completion_all_individual(self):
@@ -95,12 +101,16 @@ class ExpenseManager():
         print(f"Name{' '* 11} | Cost    | Funds   | Progress{' ' * 13}|")
         print("-" * line_length + "+")
         for key in data:
+            title_padding = ' ' * (15 - len(key))
+            allocated_fund_padding = ' ' * (6 - len(str(data[key]['allocated'])))
+            if not "cost" in data[key]:
+                print(f"{key.title()}{title_padding} | {' ' * 7} | {UIManager().green}${data[key]['allocated']}{allocated_fund_padding}{UIManager().default} | {' ' * 20} |")
+                continue
             percent_complete = round(data[key]["allocated"] / data[key]["cost"] * 100, 2)
             progress_bar = UIManager().generate_progress_bar(percent_complete)
-            title_padding = ' ' * (15 - len(key))
             cost_padding = ' ' * (6 - len(str(data[key]['cost'])))
-            allocated_fund_padding = ' ' * (6 - len(str(data[key]['allocated'])))
-            progress_bar_padding = ' ' * (20 - len(progress_bar))
+            progress_bar_padding = ' ' * (20 - len(str(progress_bar)))
+            progress_bar = UIManager().add_progress_color(progress_bar,percent_complete)
             print(f"{key.title()}{title_padding} | ${data[key]['cost']}{cost_padding} | ${data[key]['allocated']}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
 
         print("-" * line_length + "+")
@@ -114,12 +124,19 @@ class UIManager():
         self.red = "\033[31m"
         self.default = "\033[0m"
 
-    def generate_progress_bar(self, percent):
+    def generate_progress_bar(self, percent: float):
         if percent >= 100:
-            return f"{self.green}[{'■' * 10}] {percent}%{self.default}"
+            return f"[{'■' * 10}] {percent}%"
         elif percent < 0:
-            return f"{self.red}[{' ' * 10}] {percent}%{self.default}"
+            return f"[{' ' * 10}] {percent}%"
         return f"[{'■' * round(percent / 10)}{'-' * round((100 - percent) / 10)}] {percent}%"
+
+    def add_progress_color(self, string: str, percent: float):
+        if percent >= 100:
+            return f"{self.green}{string}{self.default}"
+        elif percent < 0:
+            return f"{self.red}{string}{self.default}"
+        return string
 
     def display_confirmation_dialogue(self):
         print(f"{self.red}-----------------------------------------------+")
