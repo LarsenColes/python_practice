@@ -1,4 +1,5 @@
 # Started based off of territory progress
+# NoAI
 import json
 import os
 import time

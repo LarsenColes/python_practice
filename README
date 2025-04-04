@@ -1,0 +1,27 @@
+Projects
+
+budgets
+| Project for tracking expenses. Create expenses,
+| allocate funds, see the progress you have made
+| towards saving, etc.
+|
+| Python CLI App
+
+coins
+| Project for calculating the minimum coins required
+| for certain dollar amounts. Includes graphing functionality
+| for both distributions and normal bar graphs
+|
+| Python CLI App
+
+nature_observation
+| Project for logging observations in nature. Includes functionality
+| to generate nature goals based on your geo-location in the US.
+|
+| Python Flask App, SQLite
+
+territory_progress
+| Project for keeping track of progress in completing different
+| territories.
+|
+| Python CLI App
