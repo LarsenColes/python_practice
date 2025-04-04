@@ -59,7 +59,7 @@ class ExpenseManager():
         data = self.load_data()
         expense = data.get(expense_name)
         if expense:
-            data[expense_name].update({"allocated": data[expense_name]["allocated"] + amount})
+            data[expense_name].update({"allocated": round(data[expense_name]["allocated"] + amount,2)})
         else:
             print("Sorry that expense doesn't exist.")
             time.sleep(2)
@@ -70,7 +70,7 @@ class ExpenseManager():
         data = self.load_data()
         expense = data.get(expense_name)
         if expense and "cost" in expense:
-            data[expense_name].update({"allocated": data[expense_name]["allocated"] - amount_spent})
+            data[expense_name].update({"allocated": round(data[expense_name]["allocated"] - amount_spent, 2)})
         else:
             print("Sorry that expense doesn't exist.")
             time.sleep(2)
@@ -88,13 +88,10 @@ class ExpenseManager():
             total_allocated += data[key]["allocated"]
         percent_complete = round(total_allocated / total_cost * 100, 2)
         progress_bar = UIManager().generate_progress_bar(percent_complete)
-        title_padding = ' ' * (15 - len("Total"))
-        cost_padding = ' ' * (6 - len(str(total_cost)))
-        allocated_fund_padding = ' ' * (6 - len(str(total_allocated)))
-        progress_bar_padding = ' ' * (20 - len(progress_bar))
+        progress_bar_padding = ' ' * (20 - len(str(progress_bar)))
         progress_bar = UIManager().add_progress_color(progress_bar, percent_complete)
         total_allocated = round(total_allocated, 2)
-        print(f"Total{title_padding} | ${total_cost}{cost_padding} | ${total_allocated}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
+        print(f"{'Total':15} | ${total_cost:<6} | ${total_allocated:<6} | {progress_bar}{progress_bar_padding} |")
 
     def check_completion_all_individual(self):
         data = self.load_data()
@@ -104,16 +101,14 @@ class ExpenseManager():
         print("-" * line_length + "+")
         for key in data:
             title_padding = ' ' * (15 - len(key))
-            allocated_fund_padding = ' ' * (6 - len(str(data[key]['allocated'])))
             if not "cost" in data[key]:
-                print(f"{key.title()}{title_padding} | {' ' * 7} | {UIManager().green}${data[key]['allocated']}{allocated_fund_padding}{UIManager().default} | {' ' * 20} |")
+                print(f"{key.title():15} | {' ' * 7} | {UIManager().green}${data[key]['allocated']:<6}{UIManager().default} | {' ' * 20} |")
                 continue
             percent_complete = round(data[key]["allocated"] / data[key]["cost"] * 100, 2)
             progress_bar = UIManager().generate_progress_bar(percent_complete)
-            cost_padding = ' ' * (6 - len(str(data[key]['cost'])))
             progress_bar_padding = ' ' * (20 - len(str(progress_bar)))
             progress_bar = UIManager().add_progress_color(progress_bar,percent_complete)
-            print(f"{key.title()}{title_padding} | ${data[key]['cost']}{cost_padding} | ${data[key]['allocated']}{allocated_fund_padding} | {progress_bar}{progress_bar_padding} |")
+            print(f"{key.title():15} | ${data[key]['cost']:<6} | ${data[key]['allocated']:<6} | {progress_bar}{progress_bar_padding} |")
 
         print("-" * line_length + "+")
         self.check_completion_all()
