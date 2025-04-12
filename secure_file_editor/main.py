@@ -1,3 +1,13 @@
+# Secure File Editor
+# This script provides a simple GUI for creating, opening, and saving encrypted text files.
+# It uses the cryptography library to handle encryption and decryption.
+# The files are encrypted using a password-based key derivation function (PBKDF2) and the Fernet symmetric encryption algorithm.
+# The files are saved with a .lcv extension and contain the salt used for encryption at the beginning of the file.
+# The script also includes a backup feature that saves a copy of the file in a specified backup directory.
+# The backup directory is created if it does not exist.
+# The script uses the tkinter library for the GUI and the scrolledtext widget for the text editor.
+# Import necessary libraries
+
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 from cryptography.fernet import Fernet
@@ -6,6 +16,9 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 import secrets
 import os
+import shutil
+from datetime import datetime
+
 
 class PasswordDialog:
     def __init__(self, parent):
@@ -149,6 +162,13 @@ class SecureEditor:
                 file.write(self.salt)
                 file.write(encrypted_data)
                 
+              # Backup the file
+            backup_dir = "/sfe_backups"  # Replace with your backup directory
+            os.makedirs(backup_dir, exist_ok=True)  # Ensure the backup directory exists
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            backup_path = os.path.join(backup_dir, f"{os.path.basename(self.current_file)}_{timestamp}")
+            shutil.copy2(self.current_file, backup_path)
+
             messagebox.showinfo("Success", "File saved successfully")
         except Exception as e:
             messagebox.showerror("Error", f"Failed to save file: {str(e)}")
