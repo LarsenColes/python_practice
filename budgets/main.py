@@ -91,18 +91,18 @@ class ExpenseManager():
         progress_bar_padding = ' ' * (20 - len(str(progress_bar)))
         progress_bar = UIManager().add_progress_color(progress_bar, percent_complete)
         total_allocated = round(total_allocated, 2)
-        print(f"{'Total':15} | ${total_cost:<6} | ${total_allocated:<6} | {progress_bar}{progress_bar_padding} |")
+        print(f"{'Total':15} | ${total_cost:<6} | ${total_allocated:<8} | {progress_bar}{progress_bar_padding} |")
 
     def check_completion_all_individual(self):
         data = self.load_data()
-        line_length = 59
+        line_length = 61
         print("-" * line_length + "+")
         print(f"Name{' '* 11} | Cost    | Funds   | Progress{' ' * 13}|")
         print("-" * line_length + "+")
         for key in data:
             title_padding = ' ' * (15 - len(key))
             if not "cost" in data[key]:
-                print(f"{key.title():15} | {' ' * 7} | {UIManager().green}${data[key]['allocated']:<6}{UIManager().default} | {' ' * 20} |")
+                print(f"{key.title():15} | {' ' * 7} | {UIManager().green}${data[key]['allocated']:<8}{UIManager().default} | {' ' * 20} |")
                 continue
             percent_complete = round(data[key]["allocated"] / data[key]["cost"] * 100, 2)
             progress_bar = UIManager().generate_progress_bar(percent_complete)
